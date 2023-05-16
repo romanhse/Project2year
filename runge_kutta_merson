@@ -1,0 +1,57 @@
+import math
+
+def runge_kutta_merson(f, x0, y0, h, num_steps):
+    """
+    Решает дифференциальное уравнение с помощью метода Рунге-Кутты-Мерсона.
+
+    Аргументы:
+    - f: функция правой части дифференциального уравнения (dy/dx = f(x, y)).
+    - x0: начальное значение независимой переменной.
+    - y0: начальное значение зависимой переменной.
+    - h: шаг интегрирования.
+    - num_steps: количество шагов.
+
+    Возвращает:
+    - x_values: список значений независимой переменной.
+    - y_values: список значений зависимой переменной.
+    """
+
+    x = x0
+    y = y0
+
+    x_values = [x]
+    y_values = [y]
+
+    for i in range(num_steps):
+        k1 = h * f(x, y)
+        k2 = h * f(x + h/2, y + k1/2)
+        k3 = h * f(x + h/2, y + k2/2)
+        k4 = h * f(x + h, y + k3)
+
+        y += (k1 + 2*k2 + 2*k3 + k4) / 6
+        x += h
+
+        x_values.append(x)
+        y_values.append(y)
+
+    return x_values, y_values
+
+
+
+
+
+print('Введите правую часть уравнения dy/dx = ... ')
+a = input()
+def f(x, y):
+    return eval(a)
+print('Введите начальные значения x0, y0')
+x0, y0 = list(map(float, input().split()))
+print('Введите x для получения y(x)')
+x = float(input())
+h = x - x0
+num_steps = 1
+while h > 0.01:
+    h = h/10
+    num_steps *= 10
+x_values, y_values = runge_kutta_merson(f, x0, y0, h, num_steps)
+print(y_values[-1])
