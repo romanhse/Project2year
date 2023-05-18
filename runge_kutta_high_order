@@ -1,0 +1,65 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def runge_kutta(f, x0, y0, z0, h, n):
+    """
+    Solve a second-order differential equation using the Runge-Kutta method.
+
+    Parameters:
+        f: Function representing the second-order differential equation in the form f(x, y, z).
+        x0: Initial value of x.
+        y0: Initial value of y at x = x0.
+        z0: Initial value of dy/dx at x = x0.
+        h: Step size.
+        n: Number of steps to perform.
+
+    Returns:
+        Arrays containing the values of x, y, and dy/dx.
+    """
+    x = np.zeros(n+1)
+    y = np.zeros(n+1)
+    z = np.zeros(n+1)
+
+    x[0] = x0
+    y[0] = y0
+    z[0] = z0
+
+    for i in range(n):
+        k1y = h * z[i]
+        k1z = h * f(x[i], y[i], z[i])
+        k2y = h * (z[i] + k1z/2)
+        k2z = h * f(x[i] + h/2, y[i] + k1y/2, z[i] + k1z/2)
+        k3y = h * (z[i] + k2z/2)
+        k3z = h * f(x[i] + h/2, y[i] + k2y/2, z[i] + k2z/2)
+        k4y = h * (z[i] + k3z)
+        k4z = h * f(x[i] + h, y[i] + k3y, z[i] + k3z)
+
+        x[i+1] = x[i] + h
+        y[i+1] = y[i] + (k1y + 2*k2y + 2*k3y + k4y) / 6
+        z[i+1] = z[i] + (k1z + 2*k2z + 2*k3z + k4z) / 6
+
+    return x, y, z
+
+# Example function representing the second-order differential equation: d^2y/dx^2 + y = 0
+def equation(x, y, z):
+    return -y
+
+# Initial conditions: y(0) = 1, dy/dx(0) = 0
+x0 = 0
+y0 = 1
+z0 = 0
+
+# Step size and number of steps
+h = 0.1
+n = 100
+
+# Solve the differential equation using the Runge-Kutta method
+x, y, z = runge_kutta(equation, x0, y0, z0, h, n)
+
+# Plot the solution
+plt.plot(x, y)
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Solution of the Second-Order Differential Equation')
+plt.grid(True)
+plt.show()
