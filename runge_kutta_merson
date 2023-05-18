@@ -1,4 +1,5 @@
 import math
+import matplotlib.pyplot as plt
 
 def runge_kutta_merson(f, x0, y0, h, num_steps):
     """
@@ -50,8 +51,14 @@ print('Введите x для получения y(x)')
 x = float(input())
 h = x - x0
 num_steps = 1
-while h > 0.01:
+while abs(h) > 0.01:
     h = h/10
     num_steps *= 10
 x_values, y_values = runge_kutta_merson(f, x0, y0, h, num_steps)
 print(y_values[-1])
+plt.plot(x_values, y_values)
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Solution of the Second-Order Differential Equation')
+plt.grid(True)
+plt.show()
