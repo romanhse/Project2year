@@ -41,13 +41,17 @@ def runge_kutta(f, x0, y0, z0, h, n):
     return x, y, z
 
 function representing the second-order differential equation: d^2y/dx^2 + a = 0
+print("Input right-hand side of equation: ")
 a = input()
 def equation(x, y, z):
     return eval(a)
 
-# Initial conditions: y(0) = 1, dy/dx(0) = 0
+# Initial conditions: 
+print("Input initial value of x: ")
 x0 = int(input())
+print("Input initial value of y at x = x0: ")
 y0 = int(input())
+print("Input initial value of dy/dx at x = x0: ")
 z0 = int(input())
 
 # Step size and number of steps
