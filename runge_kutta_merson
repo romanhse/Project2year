@@ -62,8 +62,7 @@ def decode_input(string):
   ans += string[-1]
   return ans
 
-b = input()
-print(decode_input(b))
+
 
 print('Введите правую часть уравнения dy/dx = ... ')
 a = input()
