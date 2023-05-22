@@ -1,5 +1,6 @@
-import math
 import matplotlib.pyplot as plt
+import math
+
 
 def runge_kutta_merson(f, x0, y0, h, num_steps):
     """
@@ -37,14 +38,37 @@ def runge_kutta_merson(f, x0, y0, h, num_steps):
 
     return x_values, y_values
 
+def decode_input(string):
+  ans = ''
+  for i in range(len(string)-1):
+    if string[i] == 'e':
+      ans += '(math.e)'
+    elif string[i] == '^':
+      ans += '**'
+    elif string[i] in ['0','1','2','3','4','5','6','7','8','9']:
+      if string[i+1] in ['e','y','x']:
+        ans += string[i]
+        ans += '*'
+      else:
+        ans += string[i]
+    elif string[i] in ['e','y','x']:
+      if string[i+1] in ['e','y','x','0','1','2','3','4','5','6','7','8','9']:
+        ans += string[i]
+        ans += '*'
+      else:
+        ans += string[i]
+    else:
+      ans += string[i]
+  ans += string[-1]
+  return ans
 
-
-
+b = input()
+print(decode_input(b))
 
 print('Введите правую часть уравнения dy/dx = ... ')
 a = input()
 def f(x, y):
-    return eval(a)
+    return eval(decode_input(a))
 print('Введите начальные значения x0, y0')
 x0, y0 = list(map(float, input().split()))
 print('Введите x для получения y(x)')
