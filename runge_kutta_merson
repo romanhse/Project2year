@@ -2,22 +2,19 @@ import matplotlib.pyplot as plt
 import math
 
 
-def runge_kutta_merson(f, x0, y0, h, num_steps):
+def runge_kutta(f, x0, y0, h, num_steps):
     """
-    Решает дифференциальное уравнение с помощью метода Рунге-Кутты-Мерсона.
-
+    Решает дифференциальное уравнение с помощью метода Рунге-Кутты.
     Аргументы:
     - f: функция правой части дифференциального уравнения (dy/dx = f(x, y)).
     - x0: начальное значение независимой переменной.
     - y0: начальное значение зависимой переменной.
     - h: шаг интегрирования.
     - num_steps: количество шагов.
-
     Возвращает:
     - x_values: список значений независимой переменной.
     - y_values: список значений зависимой переменной.
     """
-
     x = x0
     y = y0
 
@@ -46,13 +43,13 @@ def decode_input(string):
     elif string[i] == '^':
       ans += '**'
     elif string[i] in ['0','1','2','3','4','5','6','7','8','9']:
-      if string[i+1] in ['e','y','x']:
+      if string[i+1] in ['e','y','x', '(']:
         ans += string[i]
         ans += '*'
       else:
         ans += string[i]
     elif string[i] in ['e','y','x']:
-      if string[i+1] in ['e','y','x','0','1','2','3','4','5','6','7','8','9']:
+      if string[i+1] in ['e','y','x','0','1','2','3','4','5','6','7','8','9','(']:
         ans += string[i]
         ans += '*'
       else:
@@ -62,8 +59,10 @@ def decode_input(string):
   ans += string[-1]
   return ans
 
-
-
+'''
+b = input()
+print(decode_input(b))
+'''
 print('Введите правую часть уравнения dy/dx = ... ')
 a = input()
 def f(x, y):
@@ -77,8 +76,8 @@ num_steps = 1
 while abs(h) > 0.01:
     h = h/10
     num_steps *= 10
-x_values, y_values = runge_kutta_merson(f, x0, y0, h, num_steps)
-print(y_values[-1])
+x_values, y_values = runge_kutta(f, x0, y0, h, num_steps)
+print(round(y_values[-1], 8))
 plt.plot(x_values, y_values)
 plt.xlabel('x')
 plt.ylabel('y')
