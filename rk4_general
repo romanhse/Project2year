@@ -5,7 +5,7 @@ def runge_kutta_multiorder(f, x0, y_first, h, num_steps, m):
     x_values = [x0] #the x-values list
     y = [[0] for i in range(m)] # list of values of y: y[0] for y, y[1] for y' etc.
     for i in range(m):
-        y[m][0] = y_first[i]
+        y[i][0] = y_first[i]
 
     for j in range(num_steps):
         new_step = [[0]*4 for i in range(m)]
@@ -54,9 +54,9 @@ def runge_kutta_multiorder(f, x0, y_first, h, num_steps, m):
         # finally adding new values
         x_values.append(x_values[-1] + h)
         for l in range(m):
-            s = new_step[l][0] + 2*new_step[m][1] +2*new_step[m][2] + new_step[m][3]
+            s = new_step[l][0] + 2*new_step[l][1] +2*new_step[l][2] + new_step[l][3]
             s = s/6
-            y[m].append(y[m][-1] + s)
+            y[l].append(y[l][-1] + s)
 
     return x_values, y[0]
 
@@ -111,7 +111,12 @@ def func_reader(f, y, n, x_values):
             i += 1
 
         if i == len(f) - 1 and k != len(f):
-            ans += f[-1]
+            if f[-1] == 'x':
+                ans += str(x_values[n])
+            elif f[-1] == 'y':
+                ans += str(y[0][n])
+            else:
+                ans += f[-1]
 
 
     return eval(ans)
