@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import math
 def runge_kutta_multiorder(f, x0, y_first, h, num_steps, m):
     x_values = [x0] #the x-values list
     y = [[0] for i in range(m)] # list of values of y: y[0] for y, y[1] for y' etc.
@@ -117,7 +117,13 @@ def func_reader(f, y, n, x_values):
                 ans += str(y[0][n])
             else:
                 ans += f[-1]
-
+    if len(f) == 1:
+        if f[-1] == 'x':
+            ans += str(x_values[n])
+        elif f[-1] == 'y':
+            ans += str(y[0][n])
+        else:
+            ans += f[-1]
 
     return eval(ans)
 '''
