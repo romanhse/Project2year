@@ -1,84 +1,73 @@
+import numpy as np
 import matplotlib.pyplot as plt
-import math
 
-
-def runge_kutta(f, x0, y0, h, num_steps):
+def runge_kutta(f, x0, y0, z0, h, n):
     """
-    Решает дифференциальное уравнение с помощью метода Рунге-Кутты.
-    Аргументы:
-    - f: функция правой части дифференциального уравнения (dy/dx = f(x, y)).
-    - x0: начальное значение независимой переменной.
-    - y0: начальное значение зависимой переменной.
-    - h: шаг интегрирования.
-    - num_steps: количество шагов.
-    Возвращает:
-    - x_values: список значений независимой переменной.
-    - y_values: список значений зависимой переменной.
+    Solve a second-order differential equation using the Runge-Kutta method.
+
+    Parameters:
+        f: Function representing the second-order differential equation in the form f(x, y, z).
+        x0: Initial value of x.
+        y0: Initial value of y at x = x0.
+        z0: Initial value of dy/dx at x = x0.
+        h: Step size.
+        n: Number of steps to perform.
+
+    Returns:
+        Arrays containing the values of x, y, and dy/dx.
     """
-    x = x0
-    y = y0
+    x = np.zeros(n+1)
+    y = np.zeros(n+1)
+    z = np.zeros(n+1)
 
-    x_values = [x]
-    y_values = [y]
+    x[0] = x0
+    y[0] = y0
+    z[0] = z0
 
-    for i in range(num_steps):
-        k1 = h * f(x, y)
-        k2 = h * f(x + h/2, y + k1/2)
-        k3 = h * f(x + h/2, y + k2/2)
-        k4 = h * f(x + h, y + k3)
+    for i in range(n):
+        k1y = h * z[i]
+        k1z = h * f(x[i], y[i], z[i])
+        k2y = h * (z[i] + k1z/2)
+        k2z = h * f(x[i] + h/2, y[i] + k1y/2, z[i] + k1z/2)
+        k3y = h * (z[i] + k2z/2)
+        k3z = h * f(x[i] + h/2, y[i] + k2y/2, z[i] + k2z/2)
+        k4y = h * (z[i] + k3z)
+        k4z = h * f(x[i] + h, y[i] + k3y, z[i] + k3z)
 
-        y += (k1 + 2*k2 + 2*k3 + k4) / 6
-        x += h
+        x[i+1] = x[i] + h
+        y[i+1] = y[i] + (k1y + 2*k2y + 2*k3y + k4y) / 6
+        z[i+1] = z[i] + (k1z + 2*k2z + 2*k3z + k4z) / 6
 
-        x_values.append(x)
-        y_values.append(y)
+    return x, y, z
 
-    return x_values, y_values
 
-def decode_input(string):
-  ans = ''
-  for i in range(len(string)-1):
-    if string[i] == 'e':
-      ans += '(math.e)'
-    elif string[i] == '^':
-      ans += '**'
-    elif string[i] in ['0','1','2','3','4','5','6','7','8','9']:
-      if string[i+1] in ['e','y','x', '(']:
-        ans += string[i]
-        ans += '*'
-      else:
-        ans += string[i]
-    elif string[i] in ['e','y','x']:
-      if string[i+1] in ['e','y','x','0','1','2','3','4','5','6','7','8','9','(']:
-        ans += string[i]
-        ans += '*'
-      else:
-        ans += string[i]
-    else:
-      ans += string[i]
-  ans += string[-1]
-  return ans
-
-'''
-b = input()
-print(decode_input(b))
-'''
-print('Введите правую часть уравнения dy/dx = ... ')
+print("Input right-hand side of equation: ")
 a = input()
-def f(x, y):
-    return eval(decode_input(a))
-print('Введите начальные значения x0, y0')
-x0, y0 = list(map(float, input().split()))
+def equation(x, y, z):
+    return eval(a)
+
+# Initial conditions:
+print("Input initial value of x: ")
+x0 = int(input())
+print("Input initial value of y at x = x0: ")
+y0 = int(input())
+print("Input initial value of dy/dx at x = x0: ")
+z0 = int(input())
+
+# Step size and number of steps
 print('Введите x для получения y(x)')
-x = float(input())
-h = x - x0
+x1 = float(input())
+h = x1 - x0
 num_steps = 1
 while abs(h) > 0.01:
     h = h/10
     num_steps *= 10
-x_values, y_values = runge_kutta(f, x0, y0, h, num_steps)
-print(round(y_values[-1], 8))
-plt.plot(x_values, y_values)
+# Solve the differential equation using the Runge-Kutta method
+x, y, z = runge_kutta(equation, x0, y0, z0, h, num_steps)
+print(round(y[-1], 8))
+
+# Plot the solution
+plt.plot(x, y)
 plt.xlabel('x')
 plt.ylabel('y')
 plt.title('Solution of the Second-Order Differential Equation')
