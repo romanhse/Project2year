@@ -1,6 +1,6 @@
-import numpy as np
 import matplotlib.pyplot as plt
 import math
+
 def runge_kutta_multiorder(f, x0, y_first, h, num_steps, m):
     x_values = [x0] #the x-values list
     y = [[0] for i in range(m)] # list of values of y: y[0] for y, y[1] for y' etc.
@@ -69,13 +69,32 @@ def func_reader(f, y, n, x_values):
         if f[i] == 'e':
             ans += '(math.e)'
             i += 1
+        elif f[i] == 'c':
+            ans += str(math.cos(x_values[n]))
+            if f[i+3] == '(':
+                i += 6
+            else:
+                i += 4
+        elif f[i] == 's':
+            ans += str(math.sin(x_values[n]))
+            if f[i+3] == '(':
+                i += 6
+            else:
+                i += 4
+
+        elif f[i] == 'l':
+            ans += str(math.log(x_values[n]))
+            if f[i+2] == '(':
+                i += 5
+            else:
+                i += 3
 
         elif f[i] == '^':
             ans += '**'
             i += 1
 
         elif f[i] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
-            if f[i + 1] in ['e', 'y', 'x', '(']:
+            if f[i + 1] in ['e', 'y', 'x', '(','c','s']:
                 ans += f[i]
                 ans += '*'
                 i += 1
@@ -142,7 +161,7 @@ print('Input the x0')
 x0 = float(input())
 print('Input the y(x0), y1(x0), y2(x0), ... ' )
 y_first = list(map(float, input().split()))
-print('Введите x для получения y(x)')
+print('Enter x to get y(x)')
 x = float(input())
 h = x - x0
 num_steps = 1
@@ -154,6 +173,6 @@ print(round(y_values[-1], 8))
 plt.plot(x_values, y_values)
 plt.xlabel('x')
 plt.ylabel('y')
-plt.title('Solution of the Second-Order Differential Equation')
+plt.title('Solution of the Differential Equation')
 plt.grid(True)
 plt.show()
