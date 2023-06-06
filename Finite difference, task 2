@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import re
 
 
-def get_a_b(n, start, end, equation):  # function to count coefficient and matrices A and b
+def get_A_b(n, start, end, equation):  # function to count coefficient and matrices A and b
     match = re.search(r"([+-]?\d*)\s*y", equation)
     coef = int(match.group(1))  # coefficient in front of y in linear problem
     h = (end - start) / n
@@ -33,29 +33,28 @@ start = eval(input())
 print("Input end of the interval: ")
 end = eval(input())
 print("Input exact solution in terms of x: ")
-exact = eval(input().replace('x', str(end)))
+exact_solution = eval(input().replace('x', str(end)))
 print("Input grid boundaries")
 n_start = int(input())
 n_end = int(input())
 print("Input step size: ")
 n_step = int(input())
 
-
 # Initialize lists for errors
-n_s = []
+grid_number = []
 errors = []
 
 # Loop over range of n values, using our get_a_b function
 for n in range(n_start, n_end + 1, n_step):
-    x, A, b = get_a_b(n, start, end, equation)
+    x, A, b = get_A_b(n, start, end, equation)
     y = np.linalg.solve(A, b)
-    n_s.append(n)
-    e = exact - y[-1]
+    grid_number.append(n)
+    e = exact_solution - y[-1]
     errors.append(e)
 
 # Plotting
 plt.figure(figsize=(10, 10))
-plt.plot(n_s, errors)
+plt.plot(grid_number, errors)
 plt.yscale('log')
 plt.xlabel('n grid points')
 plt.ylabel('errors at x = ' + str(end))
